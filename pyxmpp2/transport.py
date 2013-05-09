@@ -236,7 +236,7 @@ class TCPTransport(XMPPTransport, IOHandler):
                                 socket.SOCK_STREAM, 0, socket.AI_NUMERICHOST)
             family = res[0][0]
             sockaddr = res[0][4]
-        except socket.gaierror:
+        except:
             family = None
             sockaddr = None
 
@@ -326,7 +326,7 @@ class TCPTransport(XMPPTransport, IOHandler):
                     self._set_state("aborted")
                     raise DNSError("Could not resolve address record for {0!r}"
                                                                 .format(name))
-            self._dst_addrs = [ (family, (addr, port)) for (family, addr)
+            self._dst_addrs = [ (family, (addr, int(port))) for (family, addr)
                                                                     in addrs ]
             self._set_state("connect")
 
@@ -388,6 +388,7 @@ class TCPTransport(XMPPTransport, IOHandler):
         :Return: `True` when just connected
         """
         try:
+
             self._socket.connect(self._dst_addr)
         except socket.error, err:
             logger.debug("Connect error: {0}".format(err))
